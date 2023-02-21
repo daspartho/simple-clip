@@ -76,7 +76,7 @@ class CLIPModel(nn.Module):
             num_attention_heads=image_encoder_num_attention_heads,
             )
 
-        self.text_encoder = text_encoder(
+        self.text_encoder = TextEncoder(
             hidden_size=text_encoder_hidden_size, 
             num_hidden_layers=text_encoder_num_hidden_layers, 
             num_attention_heads=text_encoder_num_attention_heads,
