@@ -90,10 +90,10 @@ class CLIPModel(nn.Module):
     def forward(self, text, image):
 
         image_features = self.image_encoder(image)
-        image_latents = self.image_projection(image_features)
+        image_latents = F.normalize(self.image_projection(image_features))
 
         text_features = self.text_encoder(text)
-        text_latents = self.text_projection(text_features)
+        text_latents = F.normalize(self.text_projection(text_features))
 
         logits = (image_latents @ text_latents.T) * self.temperature.exp()
         labels = torch.arange(logits.size(dim=0))
