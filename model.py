@@ -85,6 +85,8 @@ class CLIPModel(nn.Module):
         self.image_projection = nn.Linear(image_encoder_hidden_size, dim_latent, bias=False)
         self.text_projection = nn.Linear(text_encoder_hidden_size, dim_latent, bias=False)
 
+        self.temperature = nn.Parameter(torch.tensor(1.))
+
     def forward(self, text, image):
 
         image_features = self.image_encoder(image)
@@ -93,7 +95,7 @@ class CLIPModel(nn.Module):
         text_features = self.text_encoder(text)
         text_latents = self.text_projection(text_features)
 
-        logits = image_latents @ text_latents.T
+        logits = (image_latents @ text_latents.T) * self.temperature.exp()
         labels = torch.arange(logits.size(dim=0))
         
         loss_image = F.cross_entropy(logits, labels)
